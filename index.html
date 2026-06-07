@@ -375,13 +375,7 @@ const figures = [
   {caption:"Fig. 1B-E — Spike rates",     hint:"Fig 1B-E: Chair vs cotton swab (2002b)"},
   {caption:"Fig. 2 — Gaze vs arm",        hint:"Fig 2: RF stays fixed across eye positions (1994)",src:"Gaze_vs_arm_test.jpeg"},
 ];
-const figPinImages = {
-  0: "Freda_Book_Image.jpeg",
-  1: "RF_moves_with_arm.jpeg",
-  2: "Hand_to_mouth.jpeg",
-  3: "Unified_cortical_map.jpeg",
-  5: "Gaze_vs_arm_test.jpeg"
-};
+const figPinImages = {};
 
 // ═══════════════════════════════════════════════════════════════
 //  NODES
@@ -589,22 +583,31 @@ function buildNodeEl(idx) {
     </div>`;
   return el;
 }
-
 function buildFigPinEl(fi) {
-  const f=figures[fi];
-  const el=document.createElement('div');
-  el.className='fig-pin'; el.id='figpin-'+fi;
-  el.onclick=e=>{e.stopPropagation();openFigPin(fi);};
-  el.innerHTML=`
+  const f = figures[fi];
+  const el = document.createElement('div');
+  el.className = 'fig-pin'; 
+  el.id = 'figpin-' + fi;
+  el.onclick = e => { e.stopPropagation(); openFigPin(fi); };
+
+  // ۱. بررسی می‌کنیم که آیا عکس پیش‌فرضی در آرایه مشخص شده است یا خیر
+  const hasImg = f.src ? true : false;
+
+  el.innerHTML = `
     <div class="fig-tape"></div>
     <div class="fig-photo">
-      <div class="fig-photo-placeholder" id="figpin-ph-${fi}">
+      <div class="fig-photo-placeholder" id="figpin-ph-${fi}" style="${hasImg ? 'display:none;' : ''}">
         <span>${f.hint}</span>
         <button class="fig-upload-btn" onclick="event.stopPropagation();triggerFigPinUpload(${fi})">+ Add</button>
       </div>
+      
+      ${hasImg ? `<img src="${f.src}" style="width:100%; height:100%; object-fit:cover; display:block;" />` : ''}
+      
       <div class="fig-caption">${f.caption}</div>
     </div>`;
+
   return el;
+}
 }
 
 // ═══════════════════════════════════════════════════════════════
