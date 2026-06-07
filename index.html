@@ -652,36 +652,36 @@ function buildDetectives() {
 }
 
 // تابع triggerDetPhoto را هم کاملاً پاک کنید چون دیگر نیازی به آپلود دستی نیست.
-
 // ═══════════════════════════════════════════════════════════════
-//  OPEN NODE MODAL
+//  OPEN NODE MODAL (COMPLETE VERSION)
 // ═══════════════════════════════════════════════════════════════
 function openNode(index) {
-  if(index>maxUnlocked||isAnimating)return;
-  document.querySelectorAll('.waiting-click').forEach(el=>el.classList.remove('waiting-click'));
-  currentNode=index;
-  const n=nodes[index];
+  if(index > maxUnlocked || isAnimating) return;
+  document.querySelectorAll('.waiting-click').forEach(el => el.classList.remove('waiting-click'));
+  currentNode = index;
+  const n = nodes[index];
 
-  document.getElementById('modal-step-label').textContent=n.stepLabel;
-  document.getElementById('modal-title').textContent=n.title;
-  document.getElementById('nav-counter').textContent=(index+1)+' / '+nodes.length;
-  document.getElementById('btn-prev').disabled=index===0;
-  document.getElementById('btn-next').textContent=index===nodes.length-1?'Close \u2713':'Next \u2192';
+  document.getElementById('modal-step-label').textContent = n.stepLabel;
+  document.getElementById('modal-title').textContent = n.title;
+  document.getElementById('nav-counter').textContent = (index + 1) + ' / ' + nodes.length;
+  document.getElementById('btn-prev').disabled = index === 0;
+  document.getElementById('btn-next').textContent = index === nodes.length - 1 ? 'Close \u2713' : 'Next \u2192';
 
   // figures
-  const gallery=document.getElementById('modal-fig-gallery');
-  gallery.innerHTML='';
-  n.figures.forEach((fig,slot)=>{
-    const key=index+'-'+slot;
-    const src=nodeImages[key]||fig.src;
-    const item=document.createElement('div'); item.className='fig-item';
+  const gallery = document.getElementById('modal-fig-gallery');
+  gallery.innerHTML = '';
+  n.figures.forEach((fig, slot) => {
+    const key = index + '-' + slot;
+    const src = nodeImages[key] || fig.src;
+    const item = document.createElement('div'); 
+    item.className = 'fig-item';
     if(src){
-      item.innerHTML=`
+      item.innerHTML = `
         <img src="${src}" alt="${fig.caption}" onclick="openLightbox('${src}','${fig.caption}')">
         <div class="fig-item-caption">${fig.caption}</div>
         <button class="fig-add-btn" style="margin-top:5px" onclick="triggerNodeFigUpload(${index},${slot})">Replace</button>`;
     } else {
-      item.innerHTML=`
+      item.innerHTML = `
         <div class="fig-item-add" onclick="triggerNodeFigUpload(${index},${slot})">
           <span>${fig.hint}</span>
           <button class="fig-add-btn">+ Add figure</button>
@@ -692,31 +692,46 @@ function openNode(index) {
   });
 
   // text
-  const sectHtml=n.sections.map(s=>`
+  const sectHtml = n.sections.map(s => `
     <div class="modal-section">
       <div class="modal-section-label">${s.label}</div>
       <div class="modal-text">${s.text}</div>
-      ${s.challenge?`<div class="challenge-box">&#9888; Challenge to classical view:<br>${s.challenge}</div>`:''}
+      ${s.challenge ? `<div class="challenge-box">&#9888; Challenge to classical view:<br>${s.challenge}</div>` : ''}
     </div>`).join('');
-  const evHtml=n.evidence.length?`
+    
+  const evHtml = n.evidence.length ? `
     <div class="modal-section">
       <div class="modal-section-label">Evidence References</div>
-      <div>${n.evidence.map(e=>`<span class="evidence-tag">${e}</span>`).join('')}</div>
-    </div>`:'';
+      <div>${n.evidence.map(e => `<span class="evidence-tag">${e}</span>`).join('')}</div>
+    </div>` : '';
 
-  document.getElementById('modal-text-panel').innerHTML=sectHtml+evHtml;
-  document.getElementById('modal-text-panel').scrollTop=0;
+  document.getElementById('modal-text-panel').innerHTML = sectHtml + evHtml;
+  document.getElementById('modal-text-panel').scrollTop = 0;
 
   // ═══════════════════════════════════════════════════════════════
-  // اصلاح نهایی بر اساس کلاس‌های CSS برای حذف ستون در ۳ کارت آخر
+  // هوشمندسازی نمایش ستون تصاویر بر اساس کلاس‌های CSS
   // ═══════════════════════════════════════════════════════════════
-  const figPanel  = document.querySelector('.modal-fig-panel');
-
+  const figPanel = document.querySelector('.modal-fig-panel');
   if (index >= 3) {
-    if (figPanel) figPanel.style.display = 'none'; 
+    if (figPanel) figPanel.style.display = 'none'; // مخفی شدن ستون چپ در ۳ کارت آخر
   } else {
-    if (figPanel) figPanel.style.display = 'flex'; 
+    if (figPanel) figPanel.style.display = 'flex'; // لود عادی دو ستونه برای ۳ کارت اول
   }
+
+  // ═══════════════════════════════════════════════════════════════
+  // خطوط حیاتی باز شدن و فعال‌سازی انیمیشن مدال (که قطع شده بودند)
+  // ═══════════════════════════════════════════════════════════════
+  const ov = document.getElementById('modal-overlay');
+  if (ov) {
+    ov.classList.remove('anim-out');
+    ov.classList.add('open', 'anim-in');
+    setTimeout(() => ov.classList.remove('anim-in'), 300);
+  }
+
+  // توابع سیستمی بورد
+  if (typeof unlockNext === 'function') unlockNext(index);
+  if (typeof updateDots === 'function') updateDots(index);
+}
   // ═══════════════════════════════════════════════════════════════
 
   const ov=document.getElementById('modal-overlay');
