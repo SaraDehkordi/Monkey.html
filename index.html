@@ -708,19 +708,25 @@ function openNode(index) {
   document.getElementById('modal-text-panel').scrollTop=0;
 
   // ═══════════════════════════════════════════════════════════════
-  // بخش ادیت شده برای حذف ستون خالی عکس در ۳ کارت آخر
+  // اصلاح نهایی بر اساس کلاس‌های CSS برای حذف ستون در ۳ کارت آخر
   // ═══════════════════════════════════════════════════════════════
-  const figCol = document.getElementById('modal-fig-column');
-  const textCol = document.getElementById('modal-text-column'); // اگر کلاس یا آی‌دی ستون متنتان متفاوت است نامش را چک کنید
+  const figPanel  = document.querySelector('.modal-fig-panel');
 
-  // در جاوااسکریپت شمارش از صفر شروع می‌شود؛ پس ایندکس ۳، ۴ و ۵ مربوط به سه کارت آخر است
   if (index >= 3) {
-    if (figCol) figCol.style.display = 'none';       // حذف ستون خالی عکس
-    if (textCol) textCol.style.width = '100%';       // عریض شدن بخش متن
+    if (figPanel) figPanel.style.display = 'none'; 
   } else {
-    if (figCol) figCol.style.display = 'block';      // نمایش ستون عکس برای کارت‌های اول
-    if (textCol) textCol.style.width = '';           // برگشتن به سایز اصلی پیش‌فرض سی‌اس‌اس
+    if (figPanel) figPanel.style.display = 'flex'; 
   }
+  // ═══════════════════════════════════════════════════════════════
+
+  const ov=document.getElementById('modal-overlay');
+  ov.classList.remove('anim-out');
+  ov.classList.add('open','anim-in');
+  setTimeout(()=>ov.classList.remove('anim-in'),300);
+
+  unlockNext(index);
+  updateDots(index);
+}
   // ═══════════════════════════════════════════════════════════════
 
   const ov=document.getElementById('modal-overlay');
