@@ -567,20 +567,23 @@ function buildBoard() {
 }
 
 function buildNodeEl(idx) {
-  const n=nodes[idx];
-  const el=document.createElement('div');
-  el.className='node'+(idx>0?' locked':''); el.id='node-'+idx;
-  el.onclick=()=>openNode(idx);
-  el.innerHTML=`
+  const n = nodes[idx];
+  const el = document.createElement('div');
+  el.className = 'node' + (idx > 0 ? ' locked' : ''); 
+  el.id = 'node-' + idx;
+  el.onclick = () => openNode(idx);
+  
+  // لاین مربوط به card-thumb-placeholder کاملاً حذف شد
+  el.innerHTML = `
     <div class="pin"><div class="pin-head"></div><div class="pin-body"></div></div>
-    <div class="note-card ${idx===0?'active':'locked'}">
-      <div class="card-thumb-placeholder">&#128247; add figure</div>
+    <div class="note-card ${idx === 0 ? 'active' : 'locked'}">
       <div class="node-number">${n.stepLabel.split('·')[0].trim()}</div>
       <div class="node-type-badge badge-${n.type}">${typeLabels[n.type]}</div>
       <div class="node-title">${n.title}</div>
       <div class="node-preview">${n.preview}</div>
       <div class="locked-msg">&#128274; Complete previous node first</div>
     </div>`;
+    
   return el;
 }
 function buildFigPinEl(fi) {
