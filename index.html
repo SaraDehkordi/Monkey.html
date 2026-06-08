@@ -667,7 +667,7 @@ function buildDetectives() {
       <div class="det-role">${d.role}</div>
       <div class="det-detail">
         ${programName}<br>JLU Giessen
-        <br><span class="det-badge" style="background:${d.badgeColor};color:${d.badgeText}">${d.badge}</span>
+       <br>${d.badges.map(b => `<span class="det-badge" style="background:${b.bg};color:${b.text}">${b.label}</span>`).join(' ')}
       </div>`;
       
     grid.appendChild(card);
